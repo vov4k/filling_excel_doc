@@ -22,6 +22,11 @@ for row in fio_sheet.rows:
                         print(k, "-", temp)
                         k+=1
                 names = list(map(int, input("\n").split()))
+                step = input("Введите шаг с которым идут клетки (по умолчанию 1) \n")
+                if not step:
+                        step = 1
+                else:
+                        step = int(step)
                 continue
         
         file = "res/"
@@ -37,12 +42,12 @@ for row in fio_sheet.rows:
         sheet = data_wb.worksheets[0]
         j = 0
         for tmp in data_one_row:
-                if tmp:
+                if tmp and tmp != 'None':
                         ji = 0
                         for i in range(len(tmp)):
                                 ffff = sheet.cell(row=indexes[j][0], column=ji+indexes[j][1]).coordinate
                                 sheet[ffff].value=tmp[i]
-                                ji+=2
+                                ji+=step
                 j = j +1
         data_wb.save(file)
         print("Закончил: "+file)
