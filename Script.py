@@ -1,7 +1,7 @@
 import openpyxl as opx
 import shutil
-file_with_data = input("Введите название файла с данными (без расширения) \n")+".xlsx"
-template = input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
+file_with_data = "../"+input("Введите название файла с данными (без расширения) \n")+".xlsx"
+template = "../"+input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
 
 fio_wb = opx.load_workbook(file_with_data)
 fio_sheet = fio_wb.worksheets[0]
@@ -29,7 +29,7 @@ for row in fio_sheet.rows:
                         step = int(step)
                 continue
         
-        file = "res/"
+        file = "../res/"
         for h in names:
                 if data_one_row[h-1]:
                         file+=data_one_row[h-1].strip()+" "
