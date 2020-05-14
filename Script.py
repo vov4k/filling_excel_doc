@@ -14,28 +14,28 @@ for row in fio_sheet.rows:
                 data_one_row.append(str(d.value))
         if n_row == 0:
                 n_row = 1
+                step = int(input("Введите шаг с которым идут клетки по умолчанию \n"))
+                print("Если вы захитие изменить это значение для отдельного поля, то введите третим параметром, после номера стообца")
                 for temp in data_one_row:
-                        indexes.append(list(map(int, input("Введите (через пробел) строку и клетку начала поля для столбца "+temp + "\n").split())))
+                        indexes.append(list(map(int, input("Введите (через пробел) строку и столбец начала поля для столбца "+temp + "\n").split())))
                 print("Введите (через пробел) номера полей которые будут в названии файла")
                 k = 1
                 for temp in data_one_row:
                         print(k, "-", temp)
                         k+=1
                 names = list(map(int, input("\n").split()))
-                step = input("Введите шаг с которым идут клетки (по умолчанию 1) \n")
-                if not step:
-                        step = 1
-                else:
-                        step = int(step)
+                for i in range(len(indexes)):
+                        if not indexes[i][2]:
+                                indexes[i][2] = step
                 continue
         
         file = "../res/"
         for h in names:
                 if data_one_row[h-1]:
                         file+=data_one_row[h-1].strip()+" "
-        print("Начал: "+file)
-        file =file.strip() + ".xlsx"
         
+        file =file.strip() + ".xlsx"
+        print("Начал: "+file)
         shutil.copy(template, file)
         
         data_wb = opx.load_workbook(file)
@@ -47,7 +47,7 @@ for row in fio_sheet.rows:
                         for i in range(len(tmp)):
                                 ffff = sheet.cell(row=indexes[j][0], column=ji+indexes[j][1]).coordinate
                                 sheet[ffff].value=tmp[i]
-                                ji+=step
+                                ji+=indexes[j][2]
                 j = j +1
         data_wb.save(file)
         print("Закончил: "+file)
