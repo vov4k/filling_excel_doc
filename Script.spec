@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['Script.py'],
-             pathex=['C:\\Users\\golov\\OneDrive\\Рабочий стол\\programm\\filling_excel_doc'],
+             pathex=['C:\\Users\\golov\\OneDrive\\Рабочий стол\\Репозиторий\\filling_excel_doc'],
              binaries=[],
              datas=[],
              hiddenimports=[],

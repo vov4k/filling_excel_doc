@@ -1,5 +1,5 @@
 ('C:\\Users\\golov\\OneDrive\\Рабочий '
- 'стол\\programm\\filling_excel_doc\\build\\Script\\PKG-00.pkg',
+ 'стол\\Репозиторий\\filling_excel_doc\\build\\Script\\PKG-00.pkg',
  {'BINARY': 1,
   'DATA': 1,
   'EXECUTABLE': 1,
@@ -9,7 +9,7 @@
   'PYZ': 0},
  [('PYZ-00.pyz',
    'C:\\Users\\golov\\OneDrive\\Рабочий '
-   'стол\\programm\\filling_excel_doc\\build\\Script\\PYZ-00.pyz',
+   'стол\\Репозиторий\\filling_excel_doc\\build\\Script\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
    'c:\\users\\golov\\appdata\\local\\programs\\python\\python38\\lib\\struct.pyo',
@@ -34,11 +34,11 @@
    'PYSOURCE'),
   ('Script',
    'C:\\Users\\golov\\OneDrive\\Рабочий '
-   'стол\\programm\\filling_excel_doc\\Script.py',
+   'стол\\Репозиторий\\filling_excel_doc\\Script.py',
    'PYSOURCE'),
   ('Script.exe.manifest',
    'C:\\Users\\golov\\OneDrive\\Рабочий '
-   'стол\\programm\\filling_excel_doc\\build\\Script\\Script.exe.manifest',
+   'стол\\Репозиторий\\filling_excel_doc\\build\\Script\\Script.exe.manifest',
    'BINARY')],
  True,
  False,
