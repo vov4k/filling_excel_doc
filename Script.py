@@ -25,8 +25,8 @@ for row in fio_sheet.rows:
                         k+=1
                 names = list(map(int, input("\n").split()))
                 for i in range(len(indexes)):
-                        if not indexes[i][2]:
-                                indexes[i][2] = step
+                        if len(indexes[i]) == 2:
+                                indexes[i].append(step)
                 continue
         
         file = "../res/"
