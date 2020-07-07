@@ -1,12 +1,20 @@
 import openpyxl as opx
 import shutil
-file_with_data = "../"+input("Введите название файла с данными (без расширения) \n")+".xlsx"
-template = "../"+input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
+settings_file = "../"+input("Введите название файла с настройками шаблона (без расширения) \n")+".template"
+#file_with_data = "../"+input("Введите название файла с данными (без расширения) \n")+".xlsx"
+#template = "../"+input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
 
-fio_wb = opx.load_workbook(file_with_data)
-fio_sheet = fio_wb.worksheets[0]
-n_row = 0
-indexes = []
+#fio_wb = opx.load_workbook(file_with_data)
+#fio_sheet = fio_wb.worksheets[0]
+#n_row = 0
+#indexes = []
+
+with open(settings_file) as file:
+    indexes = list()
+    for line in file.readlines(): 
+        indexes.append(line.rstrip().split(';')) # Обрезаем каретку переноса строки и делим по пробелу
+print(indexes)
+
 for row in fio_sheet.rows:
         data_one_row = []
         
@@ -28,7 +36,8 @@ for row in fio_sheet.rows:
                         if len(indexes[i]) == 2:
                                 indexes[i].append(step)
                 continue
-        
+        print(indexes)
+        print(names)
         file = "../res/"
         for h in names:
                 if data_one_row[h-1]:
@@ -52,4 +61,4 @@ for row in fio_sheet.rows:
         data_wb.save(file)
         print("Закончил: "+file)
                 
-    
+'''    
