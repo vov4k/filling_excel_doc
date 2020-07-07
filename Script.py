@@ -1,19 +1,23 @@
 import openpyxl as opx
 import shutil
 settings_file = "../"+input("Введите название файла с настройками шаблона (без расширения) \n")+".template"
-#file_with_data = "../"+input("Введите название файла с данными (без расширения) \n")+".xlsx"
-#template = "../"+input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
-
-#fio_wb = opx.load_workbook(file_with_data)
-#fio_sheet = fio_wb.worksheets[0]
-#n_row = 0
-#indexes = []
+file_with_data = "../"+input("Введите название файла с данными (без расширения) \n")+".xlsx"
+template = "../"+input("Введите название файла с шаблоном (без расширения) \n")+".xlsx"
+fio_wb = opx.load_workbook(file_with_data)
+fio_sheet = fio_wb.worksheets[0]
+n_row = 0
 
 with open(settings_file) as file:
     indexes = list()
     for line in file.readlines(): 
         indexes.append(line.rstrip().split(';')) # Обрезаем каретку переноса строки и делим по пробелу
-print(indexes)
+
+print("Введите (через пробел) номера полей которые будут в названии файла")
+k = 1
+for temp in indexes:
+        print(k, "-", temp[0])
+        k+=1
+names = list(map(int, input("\n").split()))
 
 for row in fio_sheet.rows:
         data_one_row = []
@@ -22,22 +26,11 @@ for row in fio_sheet.rows:
                 data_one_row.append(str(d.value))
         if n_row == 0:
                 n_row = 1
-                step = int(input("Введите шаг с которым идут клетки по умолчанию \n"))
-                print("Если вы захитие изменить это значение для отдельного поля, то введите третим параметром, после номера стообца")
-                for temp in data_one_row:
-                        indexes.append(list(map(int, input("Введите (через пробел) строку и столбец начала поля для столбца "+temp + "\n").split())))
-                print("Введите (через пробел) номера полей которые будут в названии файла")
-                k = 1
-                for temp in data_one_row:
-                        print(k, "-", temp)
-                        k+=1
-                names = list(map(int, input("\n").split()))
-                for i in range(len(indexes)):
-                        if len(indexes[i]) == 2:
-                                indexes[i].append(step)
+                headers=list(data_one_row)
+                print(headers)
                 continue
-        print(indexes)
-        print(names)
+
+
         file = "../res/"
         for h in names:
                 if data_one_row[h-1]:
@@ -50,15 +43,22 @@ for row in fio_sheet.rows:
         data_wb = opx.load_workbook(file)
         sheet = data_wb.worksheets[0]
         j = 0
-        for tmp in data_one_row:
-                if tmp and tmp != 'None':
+
+        lll=0
+        for tmp in indexes:
+         
+            for header in headers:
+                if header == tmp[0]:
+                    one_data=data_one_row[lll]
+                    if one_data and one_data != 'None':
                         ji = 0
-                        for i in range(len(tmp)):
-                                ffff = sheet.cell(row=indexes[j][0], column=ji+indexes[j][1]).coordinate
-                                sheet[ffff].value=tmp[i]
-                                ji+=indexes[j][2]
-                j = j +1
+                        for i in range(len(one_data)):
+                                ffff = sheet.cell(row=int(indexes[j][1]), column=ji+int(indexes[j][2])).coordinate
+                                sheet[ffff].value=one_data[i]
+                                ji+=int(indexes[j][3])
+                    j = j +1
+                    lll+=1
+                    break
         data_wb.save(file)
         print("Закончил: "+file)
-                
-'''    
+
