@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
 
         self.progressBar = QProgressBar(self.formLayoutWidget)
         self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setValue(24)
+        self.progressBar.setValue(0)
 
         self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.progressBar)
 

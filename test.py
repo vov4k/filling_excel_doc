@@ -22,12 +22,20 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def browse_folder(self):
         self.dir = QtWidgets.QFileDialog.getExistingDirectory(self, "Выберите папку")
+        if self.dir:
+              self.save_dir.setText("Выбрано")
     def browse_settings(self):
         self.settings = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Файл настроек (*.template)")[0]
+        if self.settings:
+              self.settings_file.setText("Выбрано")
     def browse_db(self):
         self.db = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Excel файл (*.xlsx)")[0]
+        if self.db:
+              self.data_base.setText("Выбрано")
     def browse_template(self):
         self.template = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Файл шаблона (*.xlsx *.docx)")[0]
+        if self.template:
+              self.tmplate_file.setText("Выбрано")
     def start_proc(self):
             settings_file = self.settings
             file_with_data = self.db
@@ -60,7 +68,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             continue
                     
                     
-                    file = "../res/"
+                    file = self.dir+"/"
                     for h in names:
                             if data_one_row[h-1]:
                                     file+=data_one_row[h-1].strip()+" "
@@ -90,6 +98,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                                 break
                     data_wb.save(file)
                     print("Закончил: "+file)
+            self.progressBar.setValue(100)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
