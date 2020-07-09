@@ -3,12 +3,15 @@ import shutil
 import sys  # sys нужен для передачи argv в QApplication
 from PySide2 import QtWidgets
 import design  # Это наш конвертированный файл дизайна
+import time
+
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     dir = ''
     settings = ''
     db = ''
     template = ''
+
     def __init__(self):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
@@ -21,90 +24,108 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.Start.clicked.connect(self.start_proc)
 
     def browse_folder(self):
-        self.dir = QtWidgets.QFileDialog.getExistingDirectory(self, "Выберите папку")
+        self.dir = QtWidgets.QFileDialog.getExistingDirectory(
+            self, "Выберите папку")
         if self.dir:
-              self.save_dir.setText("Выбрано")
+            self.save_dir.setText("Выбрано")
+
     def browse_settings(self):
-        self.settings = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Файл настроек (*.template)")[0]
+        self.settings = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Выберите файл настроек", "", "Файл настроек (*.template)")[0]
         if self.settings:
-              self.settings_file.setText("Выбрано")
+            self.settings_file.setText("Выбрано")
+
     def browse_db(self):
-        self.db = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Excel файл (*.xlsx)")[0]
+        self.db = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Выберите файл с БД", "", "Excel файл (*.xlsx)")[0]
         if self.db:
-              self.data_base.setText("Выбрано")
+            self.data_base.setText("Выбрано")
+
     def browse_template(self):
-        self.template = QtWidgets.QFileDialog.getOpenFileName(self, "Выберите файл", "", "Файл шаблона (*.xlsx *.docx)")[0]
+        self.template = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Выберите шаблон", "", "Файл шаблона (*.xlsx *.docx)")[0]
         if self.template:
-              self.tmplate_file.setText("Выбрано")
+            self.tmplate_file.setText("Выбрано")
+
     def start_proc(self):
-            settings_file = self.settings
-            file_with_data = self.db
-            template = self.template
-            fio_wb = opx.load_workbook(file_with_data)
-            fio_sheet = fio_wb.worksheets[0]
-            n_row = 0
+        settings_file = self.settings
+        file_with_data = self.db
+        template = self.template
+        fio_wb = opx.load_workbook(file_with_data)
+        fio_sheet = fio_wb.worksheets[0]
+        n_row = 0
+        max_row = fio_sheet.max_row
+        with open(settings_file) as file:
+            indexes = list()
+            for line in file.readlines():
+                # Обрезаем каретку переноса строки и делим по пробелу
+                indexes.append(line.rstrip().split(';'))
+
+        print("Введите (через пробел) номера полей которые будут в названии файла")
+        k = 1
+        for temp in indexes:
+            print(k, "-", temp[0])
+            k += 1
+        names = list(map(int, input("\n").split()))
+
+        for row in fio_sheet.rows:
+            data_one_row = []
+
+            for d in row:
+                data_one_row.append(str(d.value))
+            if n_row == 0:
+                n_row = 1
+                headers = list(data_one_row)
+                continue
+
+            file = self.dir+"/"
+            for h in names:
+                if data_one_row[h-1]:
+                    file += data_one_row[h-1].strip()+" "
+
+            file = file.strip() + ".xlsx"
+            print("Начал: "+file)
+            shutil.copy(template, file)
+
+            data_wb = opx.load_workbook(file)
+            sheet = data_wb.worksheets[0]
+            j = 0
+
+
+            for tmp in indexes:
+                lll = 0 #номер столбца с данными
+                for header in headers:
+                    if header == tmp[0]:
+
+                        one_data = data_one_row[lll]
+                        if one_data and one_data != 'None':
+                            ji = 0
+                            for i in range(len(one_data)):
+                                ffff = sheet.cell(
+                                    row=int(indexes[j][1]), column=ji+int(indexes[j][2])).coordinate
+                                sheet[ffff].value = one_data[i]
+                                ji += int(indexes[j][3])
+                        j = j + 1
+                        break
+                    lll += 1
             
-            with open(settings_file) as file:
-                indexes = list()
-                for line in file.readlines(): 
-                    indexes.append(line.rstrip().split(';')) # Обрезаем каретку переноса строки и делим по пробелу
             
-            print("Введите (через пробел) номера полей которые будут в названии файла")
-            k = 1
-            for temp in indexes:
-                    print(k, "-", temp[0])
-                    k+=1
-            names = list(map(int, input("\n").split()))
             
-            for row in fio_sheet.rows:
-                    data_one_row = []
-                    
-                    for d in row:
-                            data_one_row.append(str(d.value))
-                    if n_row == 0:
-                            n_row = 1
-                            headers=list(data_one_row)
-                            print(headers)
-                            continue
-                    
-                    
-                    file = self.dir+"/"
-                    for h in names:
-                            if data_one_row[h-1]:
-                                    file+=data_one_row[h-1].strip()+" "
-                    
-                    file =file.strip() + ".xlsx"
-                    print("Начал: "+file)
-                    shutil.copy(template, file)
-                    
-                    data_wb = opx.load_workbook(file)
-                    sheet = data_wb.worksheets[0]
-                    j = 0
-            
-                    lll=0
-                    for tmp in indexes:
-                    
-                        for header in headers:
-                            if header == tmp[0]:
-                                one_data=data_one_row[lll]
-                                if one_data and one_data != 'None':
-                                    ji = 0
-                                    for i in range(len(one_data)):
-                                            ffff = sheet.cell(row=int(indexes[j][1]), column=ji+int(indexes[j][2])).coordinate
-                                            sheet[ffff].value=one_data[i]
-                                            ji+=int(indexes[j][3])
-                                j = j +1
-                                lll+=1
-                                break
-                    data_wb.save(file)
-                    print("Закончил: "+file)
-            self.progressBar.setValue(100)
+            data_wb.save(file)
+            print("Закончил: "+file)
+            time.sleep(0.01)
+            self.progressBar.setValue((n_row/max_row)*100)
+            time.sleep(0.01)
+            n_row+=1
+        self.progressBar.setValue(100)
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
     window = ExampleApp()  # Создаём объект класса ExampleApp
     window.show()  # Показываем окно
     app.exec_()  # и запускаем приложение
+
 
 if __name__ == '__main__':  # Если мы запускаем файл напрямую, а не импортируем
     main()  # то запускаем функцию main()
