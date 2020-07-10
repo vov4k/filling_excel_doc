@@ -1,2 +1,2 @@
-cd dist/Script/
+cd dist \Script\
 Script.exe
